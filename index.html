@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Do matury zostało [czas]</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --primary-clr: #A9DDD6;
+                --secondary-clr: #7A8B99;
+                --font-clr: #222222;
+                --link-clr: #0c395e;
+            }
+
+            body {
+                background-color: var(--primary-clr);
+                color: var(--font-clr);
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                font-family: 'Lora', serif;
+            }
+
+            a {
+                color: var(--link-clr);
+            }
+
+            #header {
+                font-size: 3em;
+            }
+            #timer {
+                font-size: 6em;
+            }
+            #quote {
+                font-size: 1.5em;
+            }
+
+            #year-picker {
+                padding-bottom: 3em;
+            }
+            label {
+                font-size: 3em;
+            }
+            input {
+                font-size: 3em;
+                font-family: 'Lora', serif;
+                border: 0px solid black;
+                text-align: center;
+            }
+
+            footer {
+                padding-top: 5em;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <p id='header'>Do matury zostało</p>
+            <p id='timer'>[czas]</p>
+
+            <!-- rn nic nie zapisuje wyboru roku-->
+            <div id="year-picker">
+                <label for='year'>Rok matury </label>
+                <input type='number' id='year' name='year' min='2015' max='2077' value='2022'>
+            </div>
+
+            <p id='quote'>"To jest szkoła, Potter, a nie realny świat"</p>
+            <p id='quote-author'>J. K. Rowling <i>Harry Potter i Zakon Feniksa</i></p>
+            
+            <footer>
+                <p>
+                    <a href='https://cke.gov.pl/egzamin-maturalny/egzamin-w-nowej-formule/komunikaty-i-informacje/'>CKE -  informacje</a>
+                </p>
+                <p>
+                    <a href='https://github.com/Kowalskiexe/dnidomatury'>source code</a>
+                </p>
+            </footer>
+        </div>
+        <script>
+            const timer = document.getElementById('timer');
+            const yearPicker = document.getElementById('year');
+            let year = 2022;
+            yearPicker.onchange = _ => year = yearPicker.value ;
+            function getMaturaDate() {
+                // ja mam maturę 4 maja, mniejsza o pozostałe matury
+                return new Date(`4 may ${year} 9:00`);
+            }
+
+            function getTimeUntilMatura() {
+                const time = getMaturaDate() - Date.now();
+                return time < 0 ? 0 : time;
+            }
+
+            function format(time) {
+                const full = time;
+                const seconds = Math.floor(full / 1000) % 60;
+                const minutes = Math.floor(full / 1000/ 60) % 60;
+                const hours = Math.floor(full / 1000 / 60 / 60) % 24;
+                const days = Math.floor(full / 1000 / 60 / 60 / 24);
+                const text = `${days} dni ${hours} godzin ${minutes} minut ${seconds} sekund`;
+                return text;
+            }
+
+            const interval = 300; //ms
+            function update() {
+                const timeLeft = format(getTimeUntilMatura());
+                timer.innerText = timeLeft;
+                document.title = `Do matury zostało ${timeLeft}`;
+            }
+            setInterval(update, interval);
+        </script>
+    </body>
+</html>
